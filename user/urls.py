@@ -7,4 +7,5 @@ urlpatterns = [
   url(r'userlist$', views.UserList.as_view()),
   url(r'signup$', views.user_signup),
   url(r'login$', obtain_auth_token),
+  url(r'profile$', views.get_user),
 ]

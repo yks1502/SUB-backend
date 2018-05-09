@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework import generics, status, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
@@ -34,7 +35,6 @@ def user_signup(request):
       status = status.HTTP_403_FORBIDDEN,
     )
 
-
   if not is_valid_email(email):
     return Response(
       data = {'message': 'invalid email'},
@@ -56,6 +56,18 @@ def user_signup(request):
     data = {'message': 'duplicate username'},
     status = status.HTTP_403_FORBIDDEN,
   )
+
+@permission_classes((IsAuthenticated,))
+@api_view(['GET'])
+def get_user(request):
+  user = request.user
+  if user.id is None:
+    return Response(
+      data = {'message': 'not authorized'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  user_serializer = UserSerializer(user)
+  return Response(user_serializer.data)
 
 class UserList(generics.ListAPIView):
   queryset = User.objects.all()
