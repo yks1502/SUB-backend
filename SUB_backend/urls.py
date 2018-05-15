@@ -20,4 +20,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
+    url(r'^sale/', include('transaction.urls')),
 ]
