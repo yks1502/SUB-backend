@@ -47,6 +47,8 @@ def user_signup(request):
     user.email = email
     user.set_password(password)
     user.nickname = nickname
+    token = Token.objects.create(user=user)
+    user.confirmationToken = token.key
     user.save()
     return Response(
       data = {'message': '회원가입이 성공적으로 완료되었습니다.'},
@@ -68,6 +70,28 @@ def get_user(request):
     )
   user_serializer = UserSerializer(user)
   return Response(user_serializer.data)
+
+@permission_classes((IsAuthenticated,))
+@api_view(['POST'])
+def confirm_email(request):
+  user = request.user
+  token = request.data.get('token', '')
+  print(token)
+  if user.id is None:
+    return Response(
+      data = {'message': 'not authorized'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  elif user.confirmationToken != token:
+    return Response(
+      data = {'message': '이메일 인증에 실패하였습니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  user.isConfirmed = True
+  return Response(
+    data = {'message': '이메일이 인증되었습니다'},
+    status = status.HTP_200_OK,
+  )
 
 class UserList(generics.ListAPIView):
   queryset = User.objects.all()

@@ -8,4 +8,5 @@ urlpatterns = [
   url(r'signup$', views.user_signup),
   url(r'login$', obtain_auth_token),
   url(r'profile$', views.get_user),
+  url(r'confirm_email$', views.confirm_email),
 ]
