@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework import generics, status, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
@@ -34,7 +35,6 @@ def user_signup(request):
       status = status.HTTP_403_FORBIDDEN,
     )
 
-
   if not is_valid_email(email):
     return Response(
       data = {'message': 'invalid email'},
@@ -47,6 +47,8 @@ def user_signup(request):
     user.email = email
     user.set_password(password)
     user.nickname = nickname
+    token = Token.objects.create(user=user)
+    user.confirmationToken = token.key
     user.save()
     return Response(
       data = {'message': '회원가입이 성공적으로 완료되었습니다.'},
@@ -55,6 +57,40 @@ def user_signup(request):
   return Response(
     data = {'message': 'duplicate username'},
     status = status.HTTP_403_FORBIDDEN,
+  )
+
+@permission_classes((IsAuthenticated,))
+@api_view(['GET'])
+def get_user(request):
+  user = request.user
+  if user.id is None:
+    return Response(
+      data = {'message': 'not authorized'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  user_serializer = UserSerializer(user)
+  return Response(user_serializer.data)
+
+@permission_classes((IsAuthenticated,))
+@api_view(['POST'])
+def confirm_email(request):
+  user = request.user
+  token = request.data.get('token', '')
+  print(token)
+  if user.id is None:
+    return Response(
+      data = {'message': 'not authorized'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  elif user.confirmationToken != token:
+    return Response(
+      data = {'message': '이메일 인증에 실패하였습니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  user.isConfirmed = True
+  return Response(
+    data = {'message': '이메일이 인증되었습니다'},
+    status = status.HTP_200_OK,
   )
 
 class UserList(generics.ListAPIView):
