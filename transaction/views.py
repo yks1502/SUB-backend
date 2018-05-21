@@ -64,9 +64,6 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
         data = {'message': 'not authorized'},
         status = status.HTTP_403_FORBIDDEN,
       )
-
-    purchase = Purchase.objects.get(pk=pk)
-
     purchase.isComplete = True
     purchase.save()
     return Response(
