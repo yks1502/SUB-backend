@@ -13,8 +13,9 @@ class Sale(models.Model):
   publisher = models.CharField(max_length=50, default='')
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
+  
   class Meta:
-    ordering = ('id',)
+    ordering = ('-created',)
 
   def save(self, *args, **kwargs):
     super(Sale, self).save(*args, **kwargs)
@@ -33,7 +34,7 @@ class Purchase(models.Model):
   isComplete = models.BooleanField(default=False)
 
   class Meta:
-    ordering = ('id',)
+    ordering = ('-created',)
 
   def save(self, *args, **kwargs):
     super(Purchase, self).save(*args, **kwargs)
