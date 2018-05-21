@@ -54,19 +54,19 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
   permission_classes = (IsOwnerOrReadOnly,)
 
 
-  @permission_classes((IsOwner,))
-  @api_view(['POST'])
-  def complete_purchase(request, pk):
-    user = request.user
-    purchase = Purchase.object.get(pk = pk)
-    if user.id is None or user.id != purchase.userId:
-      return Response(
-        data = {'message': 'not authorized'},
-        status = status.HTTP_403_FORBIDDEN,
-      )
-    purchase.isComplete = True
-    purchase.save()
+@permission_classes((IsOwner,))
+@api_view(['POST'])
+def complete_purchase(request, pk):
+  user = request.user
+  purchase = Purchase.object.get(pk = pk)
+  if user.id is None or user.id != purchase.userId:
     return Response(
-      data = {'message': '거래가 완료되었습니다.'},
-      status = status.HTTP_200_OK,
+      data = {'message': 'not authorized'},
+      status = status.HTTP_403_FORBIDDEN,
     )
+  purchase.isComplete = True
+  purchase.save()
+  return Response(
+    data = {'message': '거래가 완료되었습니다.'},
+    status = status.HTTP_200_OK,
+  )
