@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+
 from transaction.models import Sale, Purchase
 from transaction.serializers import SaleSerializer, PurchaseSerializer
 from user.models import User
 from user.permissions import IsOwner, IsOwnerOrReadOnly
-from rest_framework.response import Response
-from rest_framework import generics, permissions, status
-from rest_framework.decorators import api_view, permission_classes
 
 class SaleList(generics.ListCreateAPIView):
   queryset = Sale.objects.all()
@@ -50,9 +50,8 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = PurchaseSerializer
   permission_classes = (IsOwnerOrReadOnly,)
 
-
-@permission_classes((IsOwner,))
 @api_view(['POST'])
+@permission_classes((IsOwner,))
 def complete_purchase(request, pk):
   user = request.user
   purchase = Purchase.object.get(pk = pk)
