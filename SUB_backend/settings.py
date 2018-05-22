@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'user.apps.UserConfig',
-    'book.apps.BookConfig',
     'transaction.apps.TransactionConfig',
 ]
 
