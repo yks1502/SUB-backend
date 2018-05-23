@@ -1,10 +1,11 @@
 from django.db import models
+
 from user.models import User
 
 class Sale(models.Model):
   userId = models.ForeignKey(User, related_name='owner_sale', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
-  updated = models.DateTimeField(auto_now_add=True)
+  updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
   content = models.CharField(max_length=2000, default='')
   department = models.CharField(max_length=20, default='')
@@ -17,13 +18,10 @@ class Sale(models.Model):
   class Meta:
     ordering = ('-created',)
 
-  def save(self, *args, **kwargs):
-    super(Sale, self).save(*args, **kwargs)
-
 class Purchase(models.Model):
   userId = models.ForeignKey(User, related_name='owner_purchase', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
-  updated = models.DateTimeField(auto_now_add=True)
+  updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
   content = models.CharField(max_length=2000, default='')
   department = models.CharField(max_length=20, default='')
@@ -35,6 +33,3 @@ class Purchase(models.Model):
 
   class Meta:
     ordering = ('-created',)
-
-  def save(self, *args, **kwargs):
-    super(Purchase, self).save(*args, **kwargs)
