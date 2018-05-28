@@ -18,6 +18,7 @@ class SaleList(generics.ListCreateAPIView):
 
   def perform_create(self, serializer):
     serializer.save(user=self.request.user)
+
   def get_queryset(self):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
@@ -63,6 +64,7 @@ class PurchaseList(generics.ListCreateAPIView):
 
   def perform_create(self, serializer):
     serializer.save(user=self.request.user)
+
   def get_queryset(self):
     queryset = Purchase.objects.all()
     query = self.request.query_params.get('query', None)
@@ -83,7 +85,7 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes((IsOwner,))
 def complete_purchase(request, pk):
   user = request.user
-  purchase = Purchase.object.get(pk=pk)
+  purchase = Purchase.objects.get(pk=pk)
   if user.id is None or user.id != purchase.user:
     return Response(
       data = {'message': 'not authorized'},
@@ -99,3 +101,45 @@ def complete_purchase(request, pk):
 class SaleCommentList(generics.ListCreateAPIView):
   queryset = SaleComment.objects.all()
   permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+  
+  def get_serializer_class(self):
+    if self.request.method == 'GET':
+      return SaleCommentRetrieveSerializer
+    return SaleCommentCreateSerializer
+
+  def perform_create(self, serializer):
+    saleId = self.request.data.get('saleId')
+    sale = Sale.objects.get(pk=saleId)
+    serializer.save(user=self.request.user, postId=sale)
+
+class SaleCommentDetail(generics.RetrieveUpdateDestroyAPIView):
+  queryset = SaleComment.objects.all()
+  permission_classes = (IsOwnerOrReadOnly,)
+
+  def get_serializer_class(self):
+    if self.request.method == 'GET':
+      return SaleCommentRetrieveSerializer
+    return SaleCommentCreateSerializer
+
+class PurchaseCommentList(generics.ListCreateAPIView):
+  queryset = PurchaseComment.objects.all()
+  permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+  
+  def get_serializer_class(self):
+    if self.request.method == 'GET':
+      return PurchaseCommentRetrieveSerializer
+    return PurchaseCommentCreateSerializer
+
+  def perform_create(self, serializer):
+    purchaseId = self.request.data.get('purchaseId')
+    purchase = Sale.objects.get(pk=purchaseId)
+    serializer.save(user=self.request.user, postId=puchase)
+
+class PurchaseCommentDetail(generics.RetrieveUpdateDestroyAPIView):
+  queryset = PurchaseComment.objects.all()
+  permission_classes = (IsOwnerOrReadOnly,)
+
+  def get_serializer_class(self):
+    if self.request.method == 'GET':
+      return PurchaseCommentRetrieveSerializer
+    return PurchaseCommentCreateSerializer

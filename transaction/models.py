@@ -36,7 +36,7 @@ class Purchase(models.Model):
 
 class SaleComment(models.Model):
   user = models.ForeignKey(User, related_name='sale_comment_owner', on_delete=models.CASCADE)
-  postId = models.ForeignKey(Sale, related_name='sale_of_comment', on_delete=models.CASCADE)
+  postId = models.ForeignKey(Sale, related_name='sale_comments', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   content = models.CharField(max_length=2000)
@@ -46,7 +46,7 @@ class SaleComment(models.Model):
 
 class PurchaseComment(models.Model):
   user = models.ForeignKey(User, related_name='purchase_comment_owner', on_delete=models.CASCADE)
-  postId = models.ForeignKey(Purchase, related_name='purchase_of_comment', on_delete=models.CASCADE)
+  postId = models.ForeignKey(Purchase, related_name='purchase_comments', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   content = models.CharField(max_length=2000)
