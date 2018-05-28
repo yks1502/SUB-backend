@@ -7,29 +7,29 @@ from transaction.models import Sale, Purchase, SaleComment, PurchaseComment
 class SaleCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Sale
-    fields = ('id', 'userId', 'created', 'updated', 'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
-    read_only_fields = ('userId',)
+    fields = ('id', 'user', 'created', 'updated', 'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
+    read_only_fields = ('user',)
 
 class SaleRetrieveSerializer(SaleCreateSerializer):
-  userId = NicknameSerializer()
+  user = NicknameSerializer()
 
 class PurchaseCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Purchase
-    fields = ('id', 'userId', 'created', 'updated', 'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
-    read_only_fields = ('userId',)
+    fields = ('id', 'user', 'created', 'updated', 'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
+    read_only_fields = ('user',)
 
 class PurchaseRetrieveSerializer(PurchaseCreateSerializer):
-  userId = NicknameSerializer()
+  user = NicknameSerializer()
 
 class SaleCommentSerializer(serializers.ModelSerializer):
   class Meta:
     model = SaleComment
-    fields = ('id', 'userId', 'postId', 'created', 'updated', 'content')
-    read_only_fields = ('userId', 'postId',)
+    fields = ('id', 'user', 'postId', 'created', 'updated', 'content')
+    read_only_fields = ('user', 'postId',)
 
 class PurchaseCommentSerializer(serializers.ModelSerializer):
   class Meta:
     model = PurchaseComment
-    fields = ('id', 'userId', 'postId', 'created', 'updated', 'content')
-    read_only_fields = ('userId', 'postId',)
+    fields = ('id', 'user', 'postId', 'created', 'updated', 'content')
+    read_only_fields = ('user', 'postId',)

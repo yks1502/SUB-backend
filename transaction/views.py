@@ -17,7 +17,7 @@ class SaleList(generics.ListCreateAPIView):
     return SaleCreateSerializer
 
   def perform_create(self, serializer):
-    serializer.save(userId=self.request.user)
+    serializer.save(user=self.request.user)
   def get_queryset(self):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
@@ -40,7 +40,7 @@ class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
 def complete_sale(request, pk):
   user = request.user
   sale = Sale.objects.get(pk=pk)
-  if user.id is None or user.id != sale.userId:
+  if user.id is None or user.id != sale.user:
     return Response(
       data = {'message': 'not authorized'},
       status = status.HTTP_403_FORBIDDEN,
@@ -62,7 +62,7 @@ class PurchaseList(generics.ListCreateAPIView):
     return PurchaseCreateSerializer
 
   def perform_create(self, serializer):
-    serializer.save(userId=self.request.user)
+    serializer.save(user=self.request.user)
   def get_queryset(self):
     queryset = Purchase.objects.all()
     query = self.request.query_params.get('query', None)
@@ -76,7 +76,6 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
 
   def get_serializer_class(self):
     if self.request.method == 'GET':
-      print(self.request.data)
       return PurchaseRetrieveSerializer
     return PurchaseCreateSerializer
 
@@ -85,7 +84,7 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
 def complete_purchase(request, pk):
   user = request.user
   purchase = Purchase.object.get(pk=pk)
-  if user.id is None or user.id != purchase.userId:
+  if user.id is None or user.id != purchase.user:
     return Response(
       data = {'message': 'not authorized'},
       status = status.HTTP_403_FORBIDDEN,
