@@ -4,12 +4,12 @@ from user.models import User
 from transaction.models import Sale, Purchase
 
 class UserSerializer(serializers.ModelSerializer):
-  sale_owner = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
-  purchase_owner = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
+  my_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
+  my_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'nickname', 'isConfirmed', 'created', 'updated', 'confirmationToken',
-    'sale_owner', 'purchase_owner')
+    'my_sale', 'my_purchase')
 
 class NicknameSerializer(serializers.ModelSerializer):
   class Meta:
