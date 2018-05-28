@@ -5,7 +5,6 @@ from user.serializers import NicknameSerializer
 from transaction.models import Sale, Purchase, SaleComment, PurchaseComment
 
 class SaleCreateSerializer(serializers.ModelSerializer):
-  sale_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=SaleComment.objects.all())
   class Meta:
     model = Sale
     fields = ('id', 'user', 'created', 'updated',
@@ -14,10 +13,10 @@ class SaleCreateSerializer(serializers.ModelSerializer):
     read_only_fields = ('user',)
 
 class SaleRetrieveSerializer(SaleCreateSerializer):
+  sale_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=SaleComment.objects.all())
   user = NicknameSerializer()
 
 class PurchaseCreateSerializer(serializers.ModelSerializer):
-  purchase_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=PurchaseComment.objects.all())
   class Meta:
     model = Purchase
     fields = ('id', 'user', 'created', 'updated',
@@ -27,6 +26,8 @@ class PurchaseCreateSerializer(serializers.ModelSerializer):
 
 class PurchaseRetrieveSerializer(PurchaseCreateSerializer):
   user = NicknameSerializer()
+  purchase_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=PurchaseComment.objects.all())
+
 
 class SaleCommentCreateSerializer(serializers.ModelSerializer):
   class Meta:
