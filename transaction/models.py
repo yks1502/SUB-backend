@@ -3,7 +3,7 @@ from django.db import models
 from user.models import User
 
 class Sale(models.Model):
-  userId = models.ForeignKey(User, related_name='sale_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='sale_owner', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
@@ -19,7 +19,7 @@ class Sale(models.Model):
     ordering = ('-created',)
 
 class Purchase(models.Model):
-  userId = models.ForeignKey(User, related_name='purchase_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='purchase_owner', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
@@ -35,7 +35,7 @@ class Purchase(models.Model):
     ordering = ('-created',)
 
 class SaleComment(models.Model):
-  userId = models.ForeignKey(User, related_name='sale_comment_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='sale_comment_owner', on_delete=models.CASCADE)
   postId = models.ForeignKey(Sale, related_name='sale_of_comment', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
@@ -45,7 +45,7 @@ class SaleComment(models.Model):
     ordering = ('created',)
 
 class PurchaseComment(models.Model):
-  userId = models.ForeignKey(User, related_name='purchase_comment_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='purchase_comment_owner', on_delete=models.CASCADE)
   postId = models.ForeignKey(Purchase, related_name='purchase_of_comment', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
