@@ -14,6 +14,13 @@ class SaleList(generics.ListCreateAPIView):
 
   def perform_create(self, serializer):
     serializer.save(userId=self.request.user)
+  def get_queryset(self):
+    queryset = Sale.objects.all()
+    query = self.request.query_params.get('query', None)
+    if query is not None:
+        queryset = queryset.filter(bookTitle=query)
+    return queryset
+
 
 class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Sale.objects.all()
@@ -44,6 +51,12 @@ class PurchaseList(generics.ListCreateAPIView):
 
   def perform_create(self, serializer):
     serializer.save(userId=self.request.user)
+  def get_queryset(self):
+    queryset = Purchase.objects.all()
+    query = self.request.query_params.get('query', None)
+    if query is not None:
+        queryset = queryset.filter(bookTitle=query)
+    return queryset
 
 class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Purchase.objects.all()
