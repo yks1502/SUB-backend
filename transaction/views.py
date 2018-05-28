@@ -17,10 +17,8 @@ class SaleList(generics.ListCreateAPIView):
   def get_queryset(self):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
-    print(query);
     if query is not None:
         queryset = queryset.filter(bookTitle=query)
-        return queryset
     return queryset
 
 
@@ -56,10 +54,8 @@ class PurchaseList(generics.ListCreateAPIView):
   def get_queryset(self):
     queryset = Purchase.objects.all()
     query = self.request.query_params.get('query', None)
-    print(query);
     if query is not None:
         queryset = queryset.filter(bookTitle=query)
-        return queryset
     return queryset
 
 class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
