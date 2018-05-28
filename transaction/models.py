@@ -3,7 +3,7 @@ from django.db import models
 from user.models import User
 
 class Sale(models.Model):
-  userId = models.ForeignKey(User, related_name='owner_sale', on_delete=models.CASCADE)
+  userId = models.ForeignKey(User, related_name='sale_owner', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
@@ -19,7 +19,7 @@ class Sale(models.Model):
     ordering = ('-created',)
 
 class Purchase(models.Model):
-  userId = models.ForeignKey(User, related_name='owner_purchase', on_delete=models.CASCADE)
+  userId = models.ForeignKey(User, related_name='purchase_owner', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now=True)
   title = models.CharField(max_length=100, default='')
@@ -33,3 +33,24 @@ class Purchase(models.Model):
 
   class Meta:
     ordering = ('-created',)
+
+class SaleComment(models.Model):
+  userId = models.ForeignKey(User, related_name='sale_comment_owner', on_delete=models.CASCADE)
+  postId = models.ForeignKey(Sale, related_name='sale_of_comment', on_delete=models.CASCADE)
+  created = models.DateTimeField(auto_now_add=True)
+  updated = models.DateTimeField(auto_now=True)
+  content = models.CharField(max_length=2000)
+
+  class Meta:
+    ordering = ('created',)
+
+class PurchaseComment(models.Model):
+  userId = models.ForeignKey(User, related_name='purchase_comment_owner', on_delete=models.CASCADE)
+  postId = models.ForeignKey(Purchase, related_name='purchase_of_comment', on_delete=models.CASCADE)
+  created = models.DateTimeField(auto_now_add=True)
+  updated = models.DateTimeField(auto_now=True)
+  content = models.CharField(max_length=2000)
+
+  class Meta:
+    ordering = ('created',)
+    
