@@ -1,0 +1,8 @@
+db.sqlite3
+book/__pycache__/
+book/migrations/__pycache__/
+SUB_backend/__pycache__/
+transaction/__pycache__/
+transaction/migrations/__pycache__/
+user/__pycache__/
+user/migrations/__pycache__/
