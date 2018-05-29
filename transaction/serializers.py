@@ -28,7 +28,6 @@ class PurchaseRetrieveSerializer(PurchaseCreateSerializer):
   user = NicknameSerializer()
   purchase_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=PurchaseComment.objects.all())
 
-
 class SaleCommentCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = SaleComment
