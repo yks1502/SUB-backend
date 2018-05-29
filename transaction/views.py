@@ -23,7 +23,7 @@ class SaleList(generics.ListCreateAPIView):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
     if query is not None:
-        queryset = queryset.filter(bookTitle=query)
+        queryset = queryset.filter(bookTitle__icontains=query)
     return queryset
 
 
@@ -69,7 +69,7 @@ class PurchaseList(generics.ListCreateAPIView):
     queryset = Purchase.objects.all()
     query = self.request.query_params.get('query', None)
     if query is not None:
-        queryset = queryset.filter(bookTitle=query)
+        queryset = queryset.filter(bookTitle__icontains=query)
     return queryset
 
 class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -101,7 +101,7 @@ def complete_purchase(request, pk):
 class SaleCommentList(generics.ListCreateAPIView):
   queryset = SaleComment.objects.all()
   permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-  
+
   def get_serializer_class(self):
     if self.request.method == 'GET':
       return SaleCommentRetrieveSerializer
@@ -124,7 +124,7 @@ class SaleCommentDetail(generics.RetrieveUpdateDestroyAPIView):
 class PurchaseCommentList(generics.ListCreateAPIView):
   queryset = PurchaseComment.objects.all()
   permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-  
+
   def get_serializer_class(self):
     if self.request.method == 'GET':
       return PurchaseCommentRetrieveSerializer
