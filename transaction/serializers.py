@@ -8,8 +8,7 @@ class SaleCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Sale
     fields = ('id', 'user', 'created', 'updated',
-    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
-    'sale_comments')
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
     read_only_fields = ('user',)
 
 class SaleRetrieveSerializer(SaleCreateSerializer):
@@ -20,8 +19,7 @@ class PurchaseCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Purchase
     fields = ('id', 'user', 'created', 'updated',
-    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
-    'purchase_comments')
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
     read_only_fields = ('user',)
 
 class PurchaseRetrieveSerializer(PurchaseCreateSerializer):
