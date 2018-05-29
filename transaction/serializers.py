@@ -8,8 +8,9 @@ class SaleCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Sale
     fields = ('id', 'user', 'created', 'updated',
-    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
-    read_only_fields = ('user',)
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
+    'sale_comments')
+    read_only_fields = ('user', 'sale_comments')
 
 class SaleRetrieveSerializer(SaleCreateSerializer):
   sale_comments = serializers.PrimaryKeyRelatedField(many=True, queryset=SaleComment.objects.all())
@@ -19,8 +20,9 @@ class PurchaseCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Purchase
     fields = ('id', 'user', 'created', 'updated',
-    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete')
-    read_only_fields = ('user',)
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
+    'purchase_comments')
+    read_only_fields = ('user', 'purchase_comments')
 
 class PurchaseRetrieveSerializer(PurchaseCreateSerializer):
   user = NicknameSerializer()
