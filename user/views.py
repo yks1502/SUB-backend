@@ -76,7 +76,6 @@ def get_user(request):
 def confirm_email(request):
   user = request.user
   token = request.data.get('token', '')
-  print(token)
   if user.id is None:
     return Response(
       data = {'message': 'not authorized'},
@@ -90,7 +89,20 @@ def confirm_email(request):
   user.isConfirmed = True
   return Response(
     data = {'message': '이메일이 인증되었습니다'},
-    status = status.HTP_200_OK,
+    status = status.HTTP_200_OK,
+  )
+
+@api_view(['POST'])
+def duplicate_username(request):
+  username = request.data.get('username', None)
+  if User.objects.all().filter(username__icontains=username):
+    return Response(
+      data = {'message': '중복되는 아이디가 존재합니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  return Response(
+    data = {'message': '사용할 수 있는 아이디입니다'},
+    status = status.HTTP_200_OK,
   )
 
 class UserList(generics.ListAPIView):
