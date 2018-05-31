@@ -84,7 +84,7 @@ def confirm_email(request):
 @api_view(['POST'])
 def duplicate_username(request):
   username = request.data
-  if User.objects.all().filter(username=username):
+  if User.objects.filter(username=username):
     return Response(
       data = {'message': '중복되는 아이디가 존재합니다'},
       status = status.HTTP_403_FORBIDDEN,
