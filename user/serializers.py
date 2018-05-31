@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from user.models import User
-from transaction.models import Sale, Purchase
+from transaction.models import Sale, Purchase, SaleInterest, PurchaseInterest
 
 class UserSerializer(serializers.ModelSerializer):
   my_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
@@ -15,3 +15,47 @@ class NicknameSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ('id', 'nickname')
+
+class UserSaleSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Sale
+    fields = ('id', 'created', 'updated',
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
+    'sale_comments')
+
+class UserPurchaseSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Purchase
+    fields = ('id', 'created', 'updated',
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
+    'purchase_comments')
+
+class UserTransactionSerializer(serializers.ModelSerializer):
+  my_sale = UserSaleSerializer(many=True)
+  my_purchase = UserPurchaseSerializer(many=True)
+
+  class Meta:
+    model = User
+    fields = ('my_sale', 'my_purchase')
+
+class UserSaleInterestSerializer(serializers.ModelSerializer):
+  sale = UserSaleSerializer()
+
+  class Meta:
+    model = SaleInterest
+    fields = ('sale', 'created')
+
+class UserPurchaseInterestSerializer(serializers.ModelSerializer):
+  purchase = UserPurchaseSerializer()
+
+  class Meta:
+    model = PurchaseInterest
+    fields = ('purchase', 'created')
+
+class UserInterestSerializer(serializers.ModelSerializer):
+  sale_interest_owner = UserSaleInterestSerializer(many=True)
+  purchase_interest_owner = UserPurchaseInterestSerializer(many=True)
+
+  class Meta:
+    model = User
+    fields = ('sale_interest_owner', 'purchase_interest_owner')

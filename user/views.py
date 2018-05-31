@@ -9,7 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
 from user.models import User
-from user.serializers import UserSerializer
+from user.serializers import *
 
 @api_view(['POST'])
 def user_signup(request):
@@ -97,3 +97,15 @@ def duplicate_username(request):
 class UserList(generics.ListAPIView):
   queryset = User.objects.all()
   serializer_class = UserSerializer
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def user_transactions(request):
+  user_transaction_serializer = UserTransactionSerializer(request.user)
+  return Response(user_transaction_serializer.data)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def user_interests(request):
+  user_interest_serializer = UserInterestSerializer(request.user)
+  return Response(user_interest_serializer.data)

@@ -48,7 +48,7 @@ def complete_sale(request, pk):
     sale = Sale.objects.get(pk=pk)
   except Sale.DoesNotExist:
     return Response(
-      data = {'message': '해당 상품이 존재하지 않습니다'}
+      data = {'message': '해당 상품이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
   if user.id != sale.user:
@@ -99,7 +99,7 @@ def complete_purchase(request, pk):
     purchase = Purchase.objects.get(pk=pk)
   except Purchase.DoesNotExist:
     return Response(
-      data = {'message': '해당 상품이 존재하지 않습니다'}
+      data = {'message': '해당 상품이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
   if user.id != purchase.user:
