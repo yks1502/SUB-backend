@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from user.models import User
 from user.serializers import NicknameSerializer
-from transaction.models import Sale, Purchase, SaleComment, PurchaseComment
+from transaction.models import *
 
 class SaleCreateSerializer(serializers.ModelSerializer):
   class Meta:
@@ -45,3 +45,15 @@ class PurchaseCommentCreateSerializer(serializers.ModelSerializer):
 
 class PurchaseCommentRetrieveSerializer(PurchaseCommentCreateSerializer):
   user = NicknameSerializer()
+
+class SaleInterestSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = SaleInterest
+    fields = ('id', 'user', 'sale')
+    read_only_fields = ('user', 'sale',)
+
+class PurchaseInterestSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = PurchaseInterest
+    fields = ('id', 'user', 'purchase')
+    read_only_fields = ('user', 'purchase',)

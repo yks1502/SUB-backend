@@ -1,8 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
-from transaction.models import Sale, Purchase, SaleComment, PurchaseComment
+from transaction.models import *
 from transaction.serializers import *
 from user.models import User
 from user.permissions import IsOwner, IsOwnerOrReadOnly
@@ -143,3 +144,87 @@ class PurchaseCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     if self.request.method == 'GET':
       return PurchaseCommentRetrieveSerializer
     return PurchaseCommentCreateSerializer
+
+@api_view(['POST', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+def sale_interest(request, pk):
+  user = request.user
+  try :
+    sale = Sale.objects.get(pk=pk)
+  except Sale.DoesNotExist:
+    return Response(
+      data = {'message': '해당 상품이 존재하지 않습니다'},
+      status = status.HTTP_404_NOT_FOUND,
+    )
+
+  if request.method == 'POST':
+    interest, created = SaleInterest.objects.get_or_create(user=user, sale=sale)
+    if created:
+      interest.save()
+      return Response(
+        data = {'message': '관심 판매목록에 성공적으로 추가되었습니다'},
+        status = status.HTTP_200_OK,
+      )
+    return Response(
+      data = {'message': '이미 관심 판매목록에 추가되어 있습니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+
+  elif request.method == 'DELETE':
+    try :
+      interest = SaleInterest.objects.get(user=user, sale=sale)
+      interest.delete()
+    except SaleInterest.DoesNotExist:
+      return Response(
+        data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
+        status = status.HTTP_404_NOT_FOUND,
+      )
+
+class SaleInterestList(generics.ListAPIView):
+  permission_classes = (permissions.IsAuthenticated,)
+  serializer_class = SaleInterestSerializer
+
+  def get_queryset(self):
+    return SaleInterest.objects.filter(user=self.request.user)
+
+@api_view(['POST', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+def purchase_interest(request, pk):
+  user = request.user
+  try :
+    purchase = Purchase.objects.get(pk=pk)
+  except Purchase.DoesNotExist:
+    return Response(
+      data = {'message': '해당 상품이 존재하지 않습니다'},
+      status = status.HTTP_404_NOT_FOUND,
+    )
+
+  if request.method == 'POST':
+    interest, created = PurchaseInterest.objects.get_or_create(user=user, sale=sale)
+    if created:
+      interest.save()
+      return Response(
+        data = {'message': '관심 구매목록에 성공적으로 추가되었습니다'},
+        status = status.HTTP_200_OK,
+      )
+    return Response(
+      data = {'message': '이미 관심 구매목록에 추가되어 있습니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+
+  elif request.method == 'DELETE':
+    try :
+      interest = PurchaseInterest.objects.get(user=user, sale=sale)
+      interest.delete()
+    except PurchaseInterest.DoesNotExist:
+      return Response(
+        data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
+        status = status.HTTP_404_NOT_FOUND,
+      )
+
+class PurchaseInterestList(generics.ListAPIView):
+  permission_classes = (permissions.IsAuthenticated,)
+  serializer_class = PurchaseInterestSerializer
+
+  def get_queryset(self):
+    return PurchaseInterest.objects.filter(user=self.request.user)
