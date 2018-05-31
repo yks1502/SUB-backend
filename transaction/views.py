@@ -6,6 +6,7 @@ from transaction.models import Sale, Purchase, SaleComment, PurchaseComment
 from transaction.serializers import *
 from user.models import User
 from user.permissions import IsOwner, IsOwnerOrReadOnly
+from django.db.models import Q
 
 class SaleList(generics.ListCreateAPIView):
   queryset = Sale.objects.all()
@@ -23,7 +24,7 @@ class SaleList(generics.ListCreateAPIView):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
     if query is not None:
-        queryset = queryset.filter(bookTitle__icontains=query)
+        queryset = queryset.filter(Q(bookTitle__icontains=query) | Q(title__icontains=query))
     return queryset
 
 
@@ -69,7 +70,7 @@ class PurchaseList(generics.ListCreateAPIView):
     queryset = Purchase.objects.all()
     query = self.request.query_params.get('query', None)
     if query is not None:
-        queryset = queryset.filter(bookTitle__icontains=query)
+        queryset = queryset.filter(Q(bookTitle__icontains=query) | Q(title__icontains=query))
     return queryset
 
 class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
