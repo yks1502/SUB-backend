@@ -23,7 +23,7 @@ class SaleList(generics.ListCreateAPIView):
     queryset = Sale.objects.all()
     query = self.request.query_params.get('query', None)
     if query is not None:
-        queryset = queryset.filter(bookTitle__icontains=query)
+        queryset = queryset.filter(bookTitle__icontains=query, title__icontains=query)
     return queryset
 
 
