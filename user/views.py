@@ -59,29 +59,18 @@ def user_signup(request):
     status = status.HTTP_403_FORBIDDEN,
   )
 
-@permission_classes((IsAuthenticated,))
 @api_view(['GET'])
+@permission_classes((IsAuthenticated,))
 def get_user(request):
-  user = request.user
-  if user.id is None:
-    return Response(
-      data = {'message': 'not authorized'},
-      status = status.HTTP_403_FORBIDDEN,
-    )
-  user_serializer = UserSerializer(user)
+  user_serializer = UserSerializer(request.user)
   return Response(user_serializer.data)
 
-@permission_classes((IsAuthenticated,))
 @api_view(['POST'])
+@permission_classes((IsAuthenticated,))
 def confirm_email(request):
   user = request.user
   token = request.data.get('token', '')
-  if user.id is None:
-    return Response(
-      data = {'message': 'not authorized'},
-      status = status.HTTP_403_FORBIDDEN,
-    )
-  elif user.confirmationToken != token:
+  if user.confirmationToken != token:
     return Response(
       data = {'message': '이메일 인증에 실패하였습니다'},
       status = status.HTTP_403_FORBIDDEN,

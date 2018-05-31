@@ -53,4 +53,21 @@ class PurchaseComment(models.Model):
 
   class Meta:
     ordering = ('created',)
-    
+
+class SaleInterest(models.Model):
+  user = models.ForeignKey(User, related_name='sale_interest_owner', on_delete=models.CASCADE)
+  sale = models.ForeignKey(Sale, related_name='sale_interest', on_delete=models.CASCADE)
+  created = models.DateTimeField(auto_now_add=True)
+
+  class Meta:
+    unique_together = (('user', 'sale'),)
+    ordering = ('created',)
+
+class PurchaseInterest(models.Model):
+  user = models.ForeignKey(User, related_name='purchase_interest_owner', on_delete=models.CASCADE)
+  purchase = models.ForeignKey(Purchase, related_name='purchase_interest', on_delete=models.CASCADE)
+  created = models.DateTimeField(auto_now_add=True)
+
+  class Meta:
+    unique_together = (('user', 'purchase'),)
+    ordering = ('created',)
