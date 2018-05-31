@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -39,13 +41,19 @@ class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
     return SaleCreateSerializer
 
 @api_view(['POST'])
-@permission_classes((IsOwner,))
+@permission_classes((IsAuthenticated,))
 def complete_sale(request, pk):
   user = request.user
-  sale = Sale.objects.get(pk=pk)
-  if user.id is None or user.id != sale.user:
+  try:
+    sale = Sale.objects.get(pk=pk)
+  except Sale.DoesNotExist:
     return Response(
-      data = {'message': 'not authorized'},
+      data = {'message': '해당 상품이 존재하지 않습니다'}
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  if user.id != sale.user:
+    return Response(
+      data = {'message': '권한이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
   sale.isComplete = True
@@ -84,19 +92,25 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
     return PurchaseCreateSerializer
 
 @api_view(['POST'])
-@permission_classes((IsOwner,))
+@permission_classes((IsAuthenticated,))
 def complete_purchase(request, pk):
   user = request.user
-  purchase = Purchase.objects.get(pk=pk)
-  if user.id is None or user.id != purchase.user:
+  try:
+    purchase = Purchase.objects.get(pk=pk)
+  except Purchase.DoesNotExist:
     return Response(
-      data = {'message': 'not authorized'},
+      data = {'message': '해당 상품이 존재하지 않습니다'}
+      status = status.HTTP_403_FORBIDDEN,
+    )
+  if user.id != purchase.user:
+    return Response(
+      data = {'message': '권한이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
   purchase.isComplete = True
   purchase.save()
   return Response(
-    data = {'message': '거래가 완료되었습니다.'},
+    data = {'message': '거래가 완료되었습니다'},
     status = status.HTTP_200_OK,
   )
 
@@ -155,7 +169,7 @@ def sale_interest(request, pk):
   except Sale.DoesNotExist:
     return Response(
       data = {'message': '해당 상품이 존재하지 않습니다'},
-      status = status.HTTP_404_NOT_FOUND,
+      status = status.HTTP_403_FORBIDDEN,
     )
 
   if request.method == 'POST':
@@ -178,7 +192,7 @@ def sale_interest(request, pk):
     except SaleInterest.DoesNotExist:
       return Response(
         data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
-        status = status.HTTP_404_NOT_FOUND,
+        status = status.HTTP_403_FORBIDDEN,
       )
 
 class SaleInterestList(generics.ListAPIView):
@@ -197,7 +211,7 @@ def purchase_interest(request, pk):
   except Purchase.DoesNotExist:
     return Response(
       data = {'message': '해당 상품이 존재하지 않습니다'},
-      status = status.HTTP_404_NOT_FOUND,
+      status = status.HTTP_403_FORBIDDEN,
     )
 
   if request.method == 'POST':
@@ -220,7 +234,7 @@ def purchase_interest(request, pk):
     except PurchaseInterest.DoesNotExist:
       return Response(
         data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
-        status = status.HTTP_404_NOT_FOUND,
+        status = status.HTTP_403_FORBIDDEN,
       )
 
 class PurchaseInterestList(generics.ListAPIView):
