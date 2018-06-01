@@ -11,4 +11,6 @@ urlpatterns = [
   url(r'profile$', views.get_user),
   url(r'confirm_email$', views.confirm_email),
   url(r'duplicate$', views.duplicate_username),
+  url(r'transactions$', views.user_transactions),
+  url(r'interests$', views.user_interests),
 ]
