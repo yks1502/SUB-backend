@@ -52,7 +52,6 @@ class SaleList(generics.ListCreateAPIView):
         queryset = queryset.filter(Q(bookTitle__icontains=query) | Q(title__icontains=query))
     return queryset
 
-
 class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Sale.objects.all()
   permission_classes = (IsOwnerOrReadOnly,)
