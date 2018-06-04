@@ -6,4 +6,7 @@ class Book(models.Model):
   publisher = models.CharField(max_length=100)
   author = models.CharField(max_length=1000)
   priceStandard = models.IntegerField()
-  image = models.ImageField()
+  image = models.CharField(max_length=200)
+
+  class Meta:
+    ordering = ('itemId',)

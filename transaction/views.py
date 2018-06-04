@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Q
 
 from rest_framework import generics, permissions, status
@@ -5,11 +6,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+from book.models import Book
+from book.serializers import BookSerializer
 from transaction.models import *
 from transaction.serializers import *
 from user.models import User
 from user.permissions import IsOwner, IsOwnerOrReadOnly
-from django.db.models import Q
 
 class SaleList(generics.ListCreateAPIView):
   queryset = Sale.objects.all()
@@ -21,7 +23,23 @@ class SaleList(generics.ListCreateAPIView):
     return SaleCreateSerializer
 
   def perform_create(self, serializer):
-    serializer.save(user=self.request.user)
+    with transaction.atomic():
+      data = self.request.data
+      book = Book.objects.filter(itemId=data.get('itemId', None)).first()
+      if book is None:
+        book_data = {
+          'itemId': data.get('itemId', None),
+          'title': data.get('bookTitle', None),
+          'author': data.get('author', None),
+          'publisher': data.get('publisher', None),
+          'priceStandard': data.get('priceStandard', None),
+          'image': data.get('interparkImage', None),
+        }
+        book = BookSerializer(data=book_data)
+        if not book.is_valid():
+          return Response({'message': '책 정보가 올바르지 않습니다'})
+        book.save()
+      serializer.save(user=self.request.user)
 
   def get_queryset(self):
     queryset = Sale.objects.all()
@@ -73,7 +91,23 @@ class PurchaseList(generics.ListCreateAPIView):
     return PurchaseCreateSerializer
 
   def perform_create(self, serializer):
-    serializer.save(user=self.request.user)
+    with transaction.atomic():
+      data = self.request.data
+      book = Book.objects.filter(itemId=data.get('itemId', None)).first()
+      if book is None:
+        book_data = {
+          'itemId': data.get('itemId', None),
+          'title': data.get('bookTitle', None),
+          'author': data.get('author', None),
+          'publisher': data.get('publisher', None),
+          'priceStandard': data.get('priceStandard', None),
+          'image': data.get('interparkImage', None),
+        }
+        book = BookSerializer(data=book_data)
+        if not book.is_valid():
+          return Response({'message': '책 정보가 올바르지 않습니다'})
+        book.save()
+      serializer.save(user=self.request.user)
 
   def get_queryset(self):
     queryset = Purchase.objects.all()
