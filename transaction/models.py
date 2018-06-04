@@ -34,6 +34,7 @@ class Purchase(models.Model):
   publisher = models.CharField(max_length=100)
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
+  contact = models.CharField(max_length=50)
   book = models.ForeignKey(Book, related_name='purchase', on_delete=models.CASCADE, null=True, blank=True)
 
   class Meta:
