@@ -11,7 +11,7 @@ class SaleCreateSerializer(serializers.ModelSerializer):
     model = Sale
     fields = ('id', 'user', 'created', 'updated',
     'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete', 'image',
-    'sale_comments')
+    'contact', 'sale_comments')
     read_only_fields = ('user', 'sale_comments')
 
 class SaleRetrieveSerializer(SaleCreateSerializer):
@@ -23,7 +23,7 @@ class PurchaseCreateSerializer(serializers.ModelSerializer):
     model = Purchase
     fields = ('id', 'user', 'created', 'updated',
     'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
-    'purchase_comments')
+    'contact', 'purchase_comments')
     read_only_fields = ('user', 'purchase_comments')
 
 class PurchaseRetrieveSerializer(PurchaseCreateSerializer):

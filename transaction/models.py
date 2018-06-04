@@ -14,6 +14,7 @@ class Sale(models.Model):
   publisher = models.CharField(max_length=100)
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
+  contact = models.CharField(max_length=50)
   image = models.ImageField()
   
   class Meta:
@@ -31,6 +32,7 @@ class Purchase(models.Model):
   publisher = models.CharField(max_length=100)
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
+  contact = models.CharField(max_length=50)
 
   class Meta:
     ordering = ('-created',)
