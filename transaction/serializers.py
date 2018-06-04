@@ -5,7 +5,7 @@ from user.serializers import NicknameSerializer
 from transaction.models import *
 
 class SaleCreateSerializer(serializers.ModelSerializer):
-  image = serializers.ImageField(use_url=True)
+  image = serializers.ImageField(use_url=True, required=False)
 
   class Meta:
     model = Sale
