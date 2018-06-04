@@ -72,7 +72,7 @@ def complete_sale(request, pk):
       data = {'message': '해당 상품이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
-  if user.id != sale.user:
+  if user != sale.user:
     return Response(
       data = {'message': '권한이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
@@ -143,7 +143,7 @@ def complete_purchase(request, pk):
       data = {'message': '해당 상품이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
     )
-  if user.id != purchase.user:
+  if user != purchase.user:
     return Response(
       data = {'message': '권한이 존재하지 않습니다'},
       status = status.HTTP_403_FORBIDDEN,
