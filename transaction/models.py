@@ -1,6 +1,7 @@
 from django.db import models
 
 from user.models import User
+from book.models import Book
 
 class Sale(models.Model):
   user = models.ForeignKey(User, related_name='my_sale', on_delete=models.CASCADE)
@@ -16,7 +17,8 @@ class Sale(models.Model):
   isComplete = models.BooleanField(default=False)
   contact = models.CharField(max_length=50)
   image = models.ImageField()
-  
+  book = models.ForeignKey(Book, related_name='sale', on_delete=models.CASCADE, null=True, blank=True)
+
   class Meta:
     ordering = ('-created',)
 
@@ -32,7 +34,7 @@ class Purchase(models.Model):
   publisher = models.CharField(max_length=100)
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
-  contact = models.CharField(max_length=50)
+  book = models.ForeignKey(Book, related_name='purchase', on_delete=models.CASCADE, null=True, blank=True)
 
   class Meta:
     ordering = ('-created',)
