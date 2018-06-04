@@ -5,10 +5,12 @@ from user.serializers import NicknameSerializer
 from transaction.models import *
 
 class SaleCreateSerializer(serializers.ModelSerializer):
+  image = serializers.ImageField(use_url=True)
+
   class Meta:
     model = Sale
     fields = ('id', 'user', 'created', 'updated',
-    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
+    'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete', 'image',
     'sale_comments')
     read_only_fields = ('user', 'sale_comments')
 
