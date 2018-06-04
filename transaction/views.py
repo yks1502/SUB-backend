@@ -25,21 +25,24 @@ class SaleList(generics.ListCreateAPIView):
   def perform_create(self, serializer):
     with transaction.atomic():
       data = self.request.data
-      book = Book.objects.filter(itemId=data.get('itemId', None)).first()
-      if book is None:
-        book_data = {
-          'itemId': data.get('itemId', None),
-          'title': data.get('bookTitle', None),
-          'author': data.get('author', None),
-          'publisher': data.get('publisher', None),
-          'priceStandard': data.get('priceStandard', None),
-          'image': data.get('interparkImage', None),
-        }
-        book = BookSerializer(data=book_data)
-        if not book.is_valid():
-          return Response({'message': '책 정보가 올바르지 않습니다'})
-        book.save()
-      serializer.save(user=self.request.user)
+      if data.get('itemId', None) :
+          book = Book.objects.filter(itemId=data.get('itemId', None)).first()
+          if book is None:
+              book_data = {
+              'itemId': data.get('itemId', None),
+              'title': data.get('bookTitle', None),
+              'author': data.get('author', None),
+              'publisher': data.get('publisher', None),
+              'priceStandard': data.get('priceStandard', None),
+              'image': data.get('interparkImage', None),
+              }
+              book = BookSerializer(data=book_data)
+              if not book.is_valid():
+                  return Response({'message': '책 정보가 올바르지 않습니다'})
+              book.save()
+          serializer.save(user=self.request.user, book=book)
+          return
+    serializer.save(user=self.request.user)
 
   def get_queryset(self):
     queryset = Sale.objects.all()
