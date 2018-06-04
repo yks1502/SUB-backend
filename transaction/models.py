@@ -15,6 +15,7 @@ class Sale(models.Model):
   publisher = models.CharField(max_length=100)
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
+  contact = models.CharField(max_length=50)
   image = models.ImageField()
   book = models.ForeignKey(Book, related_name='sale', on_delete=models.CASCADE, null=True, blank=True)
 
@@ -34,7 +35,6 @@ class Purchase(models.Model):
   price = models.IntegerField()
   isComplete = models.BooleanField(default=False)
   book = models.ForeignKey(Book, related_name='purchase', on_delete=models.CASCADE, null=True, blank=True)
-
 
   class Meta:
     ordering = ('-created',)

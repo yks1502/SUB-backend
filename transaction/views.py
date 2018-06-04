@@ -284,3 +284,25 @@ class PurchaseInterestList(generics.ListAPIView):
 
   def get_queryset(self):
     return PurchaseInterest.objects.filter(user=self.request.user)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def get_sale_comments(request, pk):
+  try:
+    sale = Sale.objects.get(pk=pk)
+  except Sale.DoesNotExist:
+    return Response({'message': '해당 상품이 존재하지 않습니다'})
+  queryset = SaleComment.objects.filter(postId=sale)
+  serializer = SaleCommentRetrieveSerializer(queryset, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def get_purchase_comments(request, pk):
+  try:
+    purchase = Purchase.objects.get(pk=pk)
+  except Purchase.DoesNotExist:
+    return Response({'message': '해당 상품이 존재하지 않습니다'})
+  queryset = PurchaseComment.objects.filter(postId=sale)
+  serializer = PurchaseCommentRetrieveSerializer(queryset, many=True)
+  return Response(serializer.data)
