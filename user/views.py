@@ -59,11 +59,25 @@ def user_signup(request):
     status = status.HTTP_403_FORBIDDEN,
   )
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes((IsAuthenticated,))
 def get_user(request):
-  user_serializer = UserSerializer(request.user)
-  return Response(user_serializer.data)
+  if request.method == 'GET':
+    user_serializer = UserSerializer(request.user)
+    return Response(user_serializer.data)
+
+  elif request.method in ['PUT', 'PATCH']:
+    user = request.user
+    data = request.data
+    if data.get('password', None) is not None:
+      user.set_password(data.get('password', None))
+    if data.get('nickname', None) is not None:
+      user.nickname = data.get('nickname', None)
+    user.save()
+    return Response(
+      data = {'message': '회원정보 변경이 완료되었습니다'},
+      status = status.HTTP_200_OK,
+    )
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
