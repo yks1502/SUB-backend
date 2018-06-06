@@ -256,7 +256,7 @@ def purchase_interest(request, pk):
     )
 
   if request.method == 'POST':
-    interest, created = PurchaseInterest.objects.get_or_create(user=user, sale=sale)
+    interest, created = PurchaseInterest.objects.get_or_create(user=user, purchase=purchase)
     if created:
       interest.save()
       return Response(
