@@ -303,6 +303,6 @@ def get_purchase_comments(request, pk):
     purchase = Purchase.objects.get(pk=pk)
   except Purchase.DoesNotExist:
     return Response({'message': '해당 상품이 존재하지 않습니다'})
-  queryset = PurchaseComment.objects.filter(postId=sale)
+  queryset = PurchaseComment.objects.filter(postId=purchase)
   serializer = PurchaseCommentRetrieveSerializer(queryset, many=True)
   return Response(serializer.data)
