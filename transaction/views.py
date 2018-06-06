@@ -61,6 +61,30 @@ class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
       return SaleRetrieveSerializer
     return SaleCreateSerializer
 
+  def perform_update(self, serializer):
+    data = self.request.data
+    if not data.get('itemId', None):
+      serializer.save(user=self.request.user)
+      return
+    with transaction.atomic():
+      book = Book.objects.filter(itemId=data.get('itemId', None)).first()
+      if book is None:
+        book_data = {
+          'itemId': data.get('itemId', None),
+          'title': data.get('bookTitle', None),
+          'author': data.get('author', None),
+          'publisher': data.get('publisher', None),
+          'priceStandard': data.get('priceStandard', None),
+          'image': data.get('interparkImage', None),
+        }
+        book = BookSerializer(data=book_data)
+        if not book.is_valid():
+          return Response({'message': '책 정보가 올바르지 않습니다'})
+        book.save()
+        book = Book.objects.filter(itemId=data.get('itemId', None)).first()
+      serializer.save(user=self.request.user, book=book)
+
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def complete_sale(request, pk):
