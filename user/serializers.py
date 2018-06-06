@@ -6,10 +6,12 @@ from transaction.models import Sale, Purchase, SaleInterest, PurchaseInterest
 class UserSerializer(serializers.ModelSerializer):
   my_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
   my_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
+  my_interest_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
+  my_interest_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'nickname', 'isConfirmed', 'created', 'updated', 'confirmationToken',
-    'my_sale', 'my_purchase')
+    'my_sale', 'my_purchase', 'my_interest_sale', 'my_interest_purchase')
 
 class NicknameSerializer(serializers.ModelSerializer):
   class Meta:

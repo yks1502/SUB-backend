@@ -61,7 +61,7 @@ class PurchaseComment(models.Model):
     ordering = ('created',)
 
 class SaleInterest(models.Model):
-  user = models.ForeignKey(User, related_name='sale_interest_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='my_interest_sale', on_delete=models.CASCADE)
   sale = models.ForeignKey(Sale, related_name='sale_interest', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
 
@@ -70,7 +70,7 @@ class SaleInterest(models.Model):
     ordering = ('created',)
 
 class PurchaseInterest(models.Model):
-  user = models.ForeignKey(User, related_name='purchase_interest_owner', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='my_interest_purchase', on_delete=models.CASCADE)
   purchase = models.ForeignKey(Purchase, related_name='purchase_interest', on_delete=models.CASCADE)
   created = models.DateTimeField(auto_now_add=True)
 
