@@ -84,7 +84,6 @@ class SaleDetail(generics.RetrieveUpdateDestroyAPIView):
         book = Book.objects.filter(itemId=data.get('itemId', None)).first()
       serializer.save(user=self.request.user, book=book)
 
-
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def complete_sale(request, pk):
