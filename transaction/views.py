@@ -189,8 +189,8 @@ class PurchaseCommentList(generics.ListCreateAPIView):
 
   def perform_create(self, serializer):
     purchaseId = self.request.data.get('purchaseId')
-    purchase = Sale.objects.get(pk=purchaseId)
-    serializer.save(user=self.request.user, postId=puchase)
+    purchase = Purchase.objects.get(pk=purchaseId)
+    serializer.save(user=self.request.user, postId=purchase)
 
 class PurchaseCommentDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = PurchaseComment.objects.all()
