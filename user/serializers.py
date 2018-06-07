@@ -55,9 +55,9 @@ class UserPurchaseInterestSerializer(serializers.ModelSerializer):
     fields = ('purchase', 'created')
 
 class UserInterestSerializer(serializers.ModelSerializer):
-  sale_interest_owner = UserSaleInterestSerializer(many=True)
-  purchase_interest_owner = UserPurchaseInterestSerializer(many=True)
+  my_interest_sale = UserSaleInterestSerializer(many=True)
+  my_interest_purchase = UserPurchaseInterestSerializer(many=True)
 
   class Meta:
     model = User
-    fields = ('sale_interest_owner', 'purchase_interest_owner')
+    fields = ('my_interest_sale', 'my_interest_purchase')
