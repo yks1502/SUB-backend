@@ -253,6 +253,9 @@ def sale_interest(request, pk):
     try :
       interest = SaleInterest.objects.get(user=user, sale=sale)
       interest.delete()
+      return Response(
+        data = {'message': '삭제가 완료됐습니다.'}
+      )
     except SaleInterest.DoesNotExist:
       return Response(
         data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
@@ -295,6 +298,9 @@ def purchase_interest(request, pk):
     try :
       interest = PurchaseInterest.objects.get(user=user, purchase=purchase)
       interest.delete()
+      return Response(
+        data = {'message': '삭제가 완료됐습니다.'}
+      )
     except PurchaseInterest.DoesNotExist:
       return Response(
         data = {'message': '해당 상품이 관심목록에 존재하지 않습니다'},
