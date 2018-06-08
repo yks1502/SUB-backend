@@ -293,7 +293,7 @@ def purchase_interest(request, pk):
 
   elif request.method == 'DELETE':
     try :
-      interest = PurchaseInterest.objects.get(user=user, sale=sale)
+      interest = PurchaseInterest.objects.get(user=user, purchase=purchase)
       interest.delete()
     except PurchaseInterest.DoesNotExist:
       return Response(
