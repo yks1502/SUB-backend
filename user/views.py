@@ -24,10 +24,10 @@ def user_signup(request):
       return False
 
   data = request.data
-  username = data.get('username', '')
-  password = data.get('password', '')
-  email = data.get('email', '')
-  nickname = data.get('nickname', '')
+  username = data.get('username', None)
+  password = data.get('password', None)
+  email = data.get('email', None)
+  nickname = data.get('nickname', None)
 
   if len(username) < 6:
     return Response(
@@ -35,9 +35,21 @@ def user_signup(request):
       status = status.HTTP_403_FORBIDDEN,
     )
 
+  if len(password) < 8:
+    return Response(
+      data = {'message': '비밀번호는 8자 이상이어야 합니다'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+
   if not is_valid_email(email):
     return Response(
       data = {'message': 'invalid email'},
+      status = status.HTTP_403_FORBIDDEN,
+    )
+
+  if not nickname:
+    return Response(
+      data = {'message': '닉네임을 입력하여 주십시오'},
       status = status.HTTP_403_FORBIDDEN,
     )
 
