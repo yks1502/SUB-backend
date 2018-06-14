@@ -362,9 +362,7 @@ def get_sale_alarms(request):
     return Response(alarm_serializer.data)
 
   elif request.method == 'DELETE':
-    sale_alarms.update(checked=True)
-    alarm_serializer = SaleAlarmSerializer(sale_alarms, many=True)
-    return Response(alarm_serializer.data)
+    sale_alarms.delete()
 
 @api_view(['GET', 'DELETE'])
 @permission_classes((IsAuthenticated,))
@@ -376,6 +374,4 @@ def get_purchase_alarms(request):
     return Response(alarm_serializer.data)
 
   elif request.method == 'DELETE':
-    purchase_alarms.update(checked=True)
-    alarm_serializer = PurchaseAlarmSerializer(purchase_alarms, many=True)
-    return Response(alarm_serializer.data)
+    purchase_alarms.delete()

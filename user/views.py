@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
@@ -141,9 +142,11 @@ def user_alarms(request):
     return Response(user_alarm_serializer.data)
 
   elif request.method == 'DELETE':
-    sale_alarms = SaleAlarm.objects.filter(user=user)
-    purchase_alarms = PurchaseAlarm.objects.filter(user=user)
-    sale_alarms.update(checked=True)
-    purchase_alarms.update(checked=True)
-    user_alarm_serializer = UserAlarmSerializer(user)
-    return Response(user_alarm_serializer.data)
+    with transaction.atomic():
+      sale_alarms = SaleAlarm.objects.filter(user=user)
+      purchase_alarms = PurchaseAlarm.objects.filter(user=user)
+      sale_alarms.delete()
+      purchase_alarms.delete()
+      return Response(
+        data = {'message': '알림이 삭제되었습니다'},
+      )

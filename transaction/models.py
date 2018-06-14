@@ -81,7 +81,6 @@ class PurchaseInterest(models.Model):
 class SaleAlarm(models.Model):
   user = models.ForeignKey(User, related_name='sale_alarm', on_delete=models.CASCADE)
   sale = models.ForeignKey(Sale, related_name='sale_alarm_owner', on_delete=models.CASCADE)
-  checked = models.BooleanField(default=False)
 
   class Meta:
     ordering = ('id',)
@@ -89,7 +88,6 @@ class SaleAlarm(models.Model):
 class PurchaseAlarm(models.Model):
   user = models.ForeignKey(User, related_name='purchase_alarm', on_delete=models.CASCADE)
   purchase = models.ForeignKey(Purchase, related_name='purchase_alarm_owner', on_delete=models.CASCADE)
-  checked = models.BooleanField(default=False)
 
   class Meta:
     ordering = ('id',)
