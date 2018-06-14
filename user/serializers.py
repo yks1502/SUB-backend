@@ -8,11 +8,17 @@ class UserSerializer(serializers.ModelSerializer):
   my_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
   my_interest_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
   my_interest_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
+  alarm_count = serializers.SerializerMethodField()
+
+  def get_alarm_count(self, user):
+    sale_alarm_count = SaleAlarm.objects.filter(checked=False, user=user).count()
+    purchase_alarm_count = PurchaseAlarm.objects.filter(checked=False, user=user).count()
+    return sale_alarm_count + purchase_alarm_count
 
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'nickname', 'isConfirmed', 'created', 'updated', 'confirmationToken',
-    'my_sale', 'my_purchase', 'my_interest_sale', 'my_interest_purchase')
+    'my_sale', 'my_purchase', 'my_interest_sale', 'my_interest_purchase', 'alarm_count')
 
 class NicknameSerializer(serializers.ModelSerializer):
   class Meta:

@@ -120,10 +120,6 @@ def duplicate_username(request):
     status = status.HTTP_200_OK,
   )
 
-class UserList(generics.ListAPIView):
-  queryset = User.objects.all()
-  serializer_class = UserSerializer
-
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def user_transactions(request):
