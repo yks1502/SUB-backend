@@ -63,3 +63,15 @@ class PurchaseInterestSerializer(serializers.ModelSerializer):
     model = PurchaseInterest
     fields = ('id', 'user', 'purchase')
     read_only_fields = ('user', 'purchase',)
+
+class SaleAlarmSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = SaleAlarm
+    fields = ('id', 'user', 'sale', 'checked')
+    read_only_fields = ('user', 'sale',)
+
+class PurchaseAlarmSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = PurchaseAlarm
+    fields = ('id', 'user', 'purchase', 'checked')
+    read_only_fields = ('user', 'purchase',)

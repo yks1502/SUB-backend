@@ -11,6 +11,7 @@ urlpatterns = [
   url(r'^sale/(?P<pk>[0-9]+)/complete$', views.complete_sale),
   url(r'^sale/(?P<pk>[0-9]+)/interest$', views.sale_interest),
   url(r'^sale/interests$', views.SaleInterestList.as_view()),
+  url(r'^sale/alarms$', views.get_sale_alarms),
 
   url(r'^purchases$', views.PurchaseList.as_view()),
   url(r'^purchase/(?P<pk>[0-9]+)$', views.PurchaseDetail.as_view()),
@@ -20,4 +21,5 @@ urlpatterns = [
   url(r'^purchase/(?P<pk>[0-9]+)/complete$', views.complete_purchase),
   url(r'^purchase/(?P<pk>[0-9]+)/interest$', views.purchase_interest),
   url(r'^purchase/interests$', views.PurchaseInterestList.as_view()),
+  url(r'^purchase/alarms$', views.get_purchase_alarms),
 ]

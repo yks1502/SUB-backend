@@ -44,6 +44,14 @@ class SaleList(generics.ListCreateAPIView):
         book.save()
         book = Book.objects.filter(itemId=data.get('itemId', None)).first()
       serializer.save(user=self.request.user, book=book)
+      new_sale = Sale.objects.get(id=serializer.data.get('id'))
+      related_users = Purchase.objects.filter(book=book, isComplete=False).values_list('user').order_by('user').distinct()
+      for related_user in related_users:
+        if related_user[0] != self.request.user.id:
+          user = User.objects.get(id=related_user[0])
+          sale_alarm, created = SaleAlarm.objects.get_or_create(user=user, sale=new_sale)
+          if created:
+            sale_alarm.save()
 
   def get_queryset(self):
     queryset = Sale.objects.all()
@@ -138,6 +146,14 @@ class PurchaseList(generics.ListCreateAPIView):
         book.save()
         book = Book.objects.filter(itemId=data.get('itemId', None)).first()
       serializer.save(user=self.request.user, book=book)
+      new_purchase = Purchase.objects.get(id=serializer.data.get('id'))
+      related_users = Sale.objects.filter(book=book, isComplete=False).values_list('user').order_by('user').distinct()
+      for related_user in related_users:
+        if related_user[0] != self.request.user.id:
+          user = User.objects.get(id=related_user[0])
+          purchase_alarm, created = PurchaseAlarm.objects.get_or_create(user=user, purchase=new_purchase)
+          if created:
+            purchase_alarm.save()
 
   def get_queryset(self):
     queryset = Purchase.objects.all()
@@ -335,3 +351,31 @@ def get_purchase_comments(request, pk):
   queryset = PurchaseComment.objects.filter(postId=purchase)
   serializer = PurchaseCommentRetrieveSerializer(queryset, many=True)
   return Response(serializer.data)
+
+@api_view(['GET', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+def get_sale_alarms(request):
+  user = request.user
+  sale_alarms = SaleAlarm.objects.filter(user=user)
+  if request.method == 'GET':
+    alarm_serializer = SaleAlarmSerializer(sale_alarms, many=True)
+    return Response(alarm_serializer.data)
+
+  elif request.method == 'DELETE':
+    sale_alarms.update(checked=True)
+    alarm_serializer = SaleAlarmSerializer(sale_alarms, many=True)
+    return Response(alarm_serializer.data)
+
+@api_view(['GET', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+def get_purchase_alarms(request):
+  user = request.user
+  purchase_alarms = PurchaseAlarm.objects.filter(user=user)
+  if request.method == 'GET':
+    alarm_serializer = PurchaseAlarmSerializer(purchase_alarms, many=True)
+    return Response(alarm_serializer.data)
+
+  elif request.method == 'DELETE':
+    purchase_alarms.update(checked=True)
+    alarm_serializer = PurchaseAlarmSerializer(purchase_alarms, many=True)
+    return Response(alarm_serializer.data)
