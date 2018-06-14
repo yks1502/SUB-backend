@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
 from user.models import User
-from transaction.models import Sale, Purchase, SaleInterest, PurchaseInterest
+from transaction.models import *
 
 class UserSerializer(serializers.ModelSerializer):
   my_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
   my_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
   my_interest_sale = serializers.PrimaryKeyRelatedField(many=True, queryset=Sale.objects.all())
   my_interest_purchase = serializers.PrimaryKeyRelatedField(many=True, queryset=Purchase.objects.all())
+
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'nickname', 'isConfirmed', 'created', 'updated', 'confirmationToken',
@@ -19,16 +20,20 @@ class NicknameSerializer(serializers.ModelSerializer):
     fields = ('id', 'nickname')
 
 class UserSaleSerializer(serializers.ModelSerializer):
+  user = NicknameSerializer()
+
   class Meta:
     model = Sale
-    fields = ('id', 'created', 'updated',
+    fields = ('id', 'created', 'updated', 'user',
     'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
     'sale_comments')
 
 class UserPurchaseSerializer(serializers.ModelSerializer):
+  user = NicknameSerializer()
+
   class Meta:
     model = Purchase
-    fields = ('id', 'created', 'updated',
+    fields = ('id', 'created', 'updated', 'user',
     'title', 'content', 'department', 'bookTitle', 'author', 'publisher', 'price', 'isComplete',
     'purchase_comments')
 
@@ -61,3 +66,27 @@ class UserInterestSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ('my_interest_sale', 'my_interest_purchase')
+
+class UserSaleAlarmSerializer(serializers.ModelSerializer):
+  sale = UserSaleSerializer()
+
+  class Meta:
+    model = SaleAlarm
+    fields = ('id', 'user', 'sale', 'checked')
+    read_only_fields = ('user', 'sale',)
+
+class UserPurchaseAlarmSerializer(serializers.ModelSerializer):
+  purchase = UserPurchaseSerializer()
+
+  class Meta:
+    model = PurchaseAlarm
+    fields = ('id', 'user', 'purchase', 'checked')
+    read_only_fields = ('user', 'purchase',)
+
+class UserAlarmSerializer(serializers.ModelSerializer):
+  sale_alarm = UserSaleAlarmSerializer(many=True)
+  purchase_alarm = UserPurchaseAlarmSerializer(many=True)
+
+  class Meta:
+    model = User
+    fields = ('sale_alarm', 'purchase_alarm')

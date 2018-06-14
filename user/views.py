@@ -135,3 +135,19 @@ def user_transactions(request):
 def user_interests(request):
   user_interest_serializer = UserInterestSerializer(request.user)
   return Response(user_interest_serializer.data)
+
+@api_view(['GET', 'DELETE'])
+@permission_classes((IsAuthenticated,))
+def user_alarms(request):
+  user = request.user
+  if request.method == 'GET':
+    user_alarm_serializer = UserAlarmSerializer(user)
+    return Response(user_alarm_serializer.data)
+
+  elif request.method == 'DELETE':
+    sale_alarms = SaleAlarm.objects.filter(user=user)
+    purchase_alarms = PurchaseAlarm.objects.filter(user=user)
+    sale_alarms.update(checked=True)
+    purchase_alarms.update(checked=True)
+    user_alarm_serializer = UserAlarmSerializer(user)
+    return Response(user_alarm_serializer.data)

@@ -5,7 +5,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
 urlpatterns = [
-  url(r'userlist$', views.UserList.as_view()),
   url(r'signup$', views.user_signup),
   url(r'login$', obtain_auth_token),
   url(r'profile$', views.get_user),
@@ -13,4 +12,5 @@ urlpatterns = [
   url(r'duplicate$', views.duplicate_username),
   url(r'transactions$', views.user_transactions),
   url(r'interests$', views.user_interests),
+  url(r'alarms$', views.user_alarms),
 ]
