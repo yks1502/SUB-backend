@@ -331,7 +331,7 @@ class PurchaseInterestList(generics.ListAPIView):
     return PurchaseInterest.objects.filter(user=self.request.user)
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def get_sale_comments(request, pk):
   try:
     sale = Sale.objects.get(pk=pk)
@@ -342,7 +342,7 @@ def get_sale_comments(request, pk):
   return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def get_purchase_comments(request, pk):
   try:
     purchase = Purchase.objects.get(pk=pk)
